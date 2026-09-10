@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kana & Kanji Practice</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<div class="card">
+  <h1>Práctica de Kana / Kanji</h1>
+  
+  <!-- Vista del Juego -->
+  <div id="game-view" style="display:none;">
+    <div class="furigana" id="furigana-text"></div>
+    <a id="kana-display" class="display-kana" target="_blank" title="Clic para abrir en Jisho"></a>
+    <div>
+      <input type="text" id="user-input" placeholder="Escribe romaji / significado..." autocomplete="off">
+    </div>
+    <div class="stats" id="stats-display"></div>
+  </div>
+
+  <!-- Vista de Configuración -->
+  <div id="config-view">
+    <p><strong>Selección rápida:</strong></p>
+    <div style="display:flex; gap:5px; justify-content:center; margin-bottom:10px;">
+      <button class="btn btn-secondary" onclick="filterCategory('Hiragana')">Hiragana</button>
+      <button class="btn btn-secondary" onclick="filterCategory('Katakana')">Katakana</button>
+      <button class="btn btn-secondary" onclick="filterCategory('Kanji')">Kanji</button>
+      <button class="btn btn-secondary" style="background:#e74c3c;" onclick="clearAllFilters()">Limpiar</button>
+    </div>
+
+    <p><strong>Grupos disponibles:</strong></p>
+    <div class="controls" id="groups-list"></div>
+    <button class="btn" onclick="startGame()">Empezar Práctica</button>
+  </div>
+</div>
+
+<script src="js/dataset.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
