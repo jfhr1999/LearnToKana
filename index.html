@@ -7,37 +7,66 @@
   <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
+    <button id="theme-toggle" class="theme-toggle-btn">🌙</button>
+    <div class="container">
+        <!-- Vista de Selección/Configuración -->
+        <section id="setup-view" class="view active">
+        <h1>Configuración de Estudio</h1>
 
-<div class="card">
-  <h1>Práctica de Kana / Kanji</h1>
-  
-  <!-- Vista del Juego -->
-  <div id="game-view" style="display:none;">
-    <div class="furigana" id="furigana-text"></div>
-    <a id="kana-display" class="display-kana" target="_blank" title="Clic para abrir en Jisho"></a>
-    <div>
-      <input type="text" id="user-input" placeholder="Escribe romaji / significado..." autocomplete="off">
+        <!-- Selector de Sistema principal -->
+        <div class="tabs">
+            <button class="tab-btn active" data-system="hiragana">Hiragana</button>
+            <button class="tab-btn" data-system="katakana">Katakana</button>
+            <button class="tab-btn" data-system="kanji">Kanji</button>
+        </div>
+
+        <!-- Preferencias de entrada -->
+        <div class="options-panel">
+            <label class="toggle-label">
+            <input type="checkbox" id="toggle-meaning" checked>
+            Mostrar pista de significado
+            </label>
+        </div>
+
+        <!-- Contenedor dinámico de checkboxes por bloques -->
+        <div id="groups-container" class="groups-grid">
+            <!-- Generado dinámicamente desde app.js -->
+        </div>
+
+        <button id="start-btn" class="btn-primary" disabled>Empezar Práctica</button>
+        </section>
+
+        <!-- Vista del Juego / Práctica -->
+        <section id="quiz-view" class="view">
+        <header class="quiz-header">
+            <button id="exit-btn" class="btn-secondary">← Menú</button>
+            <span id="card-badge" class="badge">JLPT N5 · Bloque 1</span>
+            <div class="score-tracker">
+            <span id="score-correct">✓ 0</span> | <span id="score-incorrect">✗ 0</span>
+            </div>
+        </header>
+
+        <main class="card-container">
+            <div class="card">
+            <div id="card-prompt" class="prompt-text">建物</div>
+            <div id="card-meaning" class="meaning-text">Edificio</div>
+            </div>
+
+            <form id="quiz-form" autocomplete="off">
+            <input 
+                type="text" 
+                id="answer-input" 
+                placeholder="Escribe en Kana (ej. たてもの)..." 
+                autofocus 
+            />
+            <button type="submit" class="btn-primary">Enviar</button>
+            </form>
+
+            <div id="feedback-msg" class="feedback"></div>
+        </main>
+        </section>
     </div>
-    <div class="stats" id="stats-display"></div>
-  </div>
 
-  <!-- Vista de Configuración -->
-  <div id="config-view">
-    <p><strong>Selección rápida:</strong></p>
-    <div style="display:flex; gap:5px; justify-content:center; margin-bottom:10px;">
-      <button class="btn btn-secondary" onclick="filterCategory('Hiragana')">Hiragana</button>
-      <button class="btn btn-secondary" onclick="filterCategory('Katakana')">Katakana</button>
-      <button class="btn btn-secondary" onclick="filterCategory('Kanji')">Kanji</button>
-      <button class="btn btn-secondary" style="background:#e74c3c;" onclick="clearAllFilters()">Limpiar</button>
-    </div>
-
-    <p><strong>Grupos disponibles:</strong></p>
-    <div class="controls" id="groups-list"></div>
-    <button class="btn" onclick="startGame()">Empezar Práctica</button>
-  </div>
-</div>
-
-<script src="js/dataset.js"></script>
-<script src="js/app.js"></script>
+  <script src="js/app.js"></script>
 </body>
 </html>

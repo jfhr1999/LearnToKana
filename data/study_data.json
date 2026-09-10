@@ -1,0 +1,329 @@
+[
+  {
+    "id": "h_single_a",
+    "prompt": "あ",
+    "reading": "あ",
+    "romaji": "a",
+    "meaning": null,
+    "system": "hiragana",
+    "deck": "single",
+    "group": "Gojūon - Vowels"
+  },
+  {
+    "id": "h_single_i",
+    "prompt": "い",
+    "reading": "い",
+    "romaji": "i",
+    "meaning": null,
+    "system": "hiragana",
+    "deck": "single",
+    "group": "Gojūon - Vowels"
+  },
+  {
+    "id": "h_single_u",
+    "prompt": "う",
+    "reading": "う",
+    "romaji": "u",
+    "meaning": null,
+    "system": "hiragana",
+    "deck": "single",
+    "group": "Gojūon - Vowels"
+  },
+  {
+    "id": "h_single_e",
+    "prompt": "え",
+    "reading": "え",
+    "romaji": "e",
+    "meaning": null,
+    "system": "hiragana",
+    "deck": "single",
+    "group": "Gojūon - Vowels"
+  },
+  {
+    "id": "h_single_o",
+    "prompt": "お",
+    "reading": "お",
+    "romaji": "o",
+    "meaning": null,
+    "system": "hiragana",
+    "deck": "single",
+    "group": "Gojūon - Vowels"
+  },
+
+  {
+    "id": "h_single_ka",
+    "prompt": "か",
+    "reading": "か",
+    "romaji": "ka",
+    "meaning": null,
+    "system": "hiragana",
+    "deck": "single",
+    "group": "Gojūon - K-Group"
+  },
+  {
+    "id": "h_single_ki",
+    "prompt": "き",
+    "reading": "き",
+    "romaji": "ki",
+    "meaning": null,
+    "system": "hiragana",
+    "deck": "single",
+    "group": "Gojūon - K-Group"
+  },
+  {
+    "id": "h_single_ku",
+    "prompt": "く",
+    "reading": "く",
+    "romaji": "ku",
+    "meaning": null,
+    "system": "hiragana",
+    "deck": "single",
+    "group": "Gojūon - K-Group"
+  },
+  {
+    "id": "h_single_ke",
+    "prompt": "け",
+    "reading": "け",
+    "romaji": "ke",
+    "meaning": null,
+    "system": "hiragana",
+    "deck": "single",
+    "group": "Gojūon - K-Group"
+  },
+  {
+    "id": "h_single_ko",
+    "prompt": "こ",
+    "reading": "こ",
+    "romaji": "ko",
+    "meaning": null,
+    "system": "hiragana",
+    "deck": "single",
+    "group": "Gojūon - K-Group"
+  },
+
+  {
+    "id": "h_double_ga",
+    "prompt": "が",
+    "reading": "が",
+    "romaji": "ga",
+    "meaning": null,
+    "system": "hiragana",
+    "deck": "double",
+    "group": "Dakuon - G-Group"
+  },
+  {
+    "id": "h_double_kya",
+    "prompt": "きゃ",
+    "reading": "きゃ",
+    "romaji": "kya",
+    "meaning": null,
+    "system": "hiragana",
+    "deck": "double",
+    "group": "Yōon - KY-Group"
+  },
+
+  {
+    "id": "h_word_01",
+    "prompt": "すみません",
+    "reading": "すみません",
+    "romaji": "sumimasen",
+    "meaning": "Disculpe / Excuse me",
+    "system": "hiragana",
+    "deck": "words",
+    "group": "Frases Básicas"
+  },
+  {
+    "id": "h_word_02",
+    "prompt": "ありがとう",
+    "reading": "ありがとう",
+    "romaji": "arigatou",
+    "meaning": "Gracias / Thank you",
+    "system": "hiragana",
+    "deck": "words",
+    "group": "Frases Básicas"
+  },
+
+  {
+    "id": "k_single_a",
+    "prompt": "ア",
+    "reading": "あ",
+    "romaji": "a",
+    "meaning": null,
+    "system": "katakana",
+    "deck": "single",
+    "group": "Gojūon - Vowels"
+  },
+  {
+    "id": "k_single_i",
+    "prompt": "イ",
+    "reading": "い",
+    "romaji": "i",
+    "meaning": null,
+    "system": "katakana",
+    "deck": "single",
+    "group": "Gojūon - Vowels"
+  },
+  {
+    "id": "k_ext_ti",
+    "prompt": "ティ",
+    "reading": "てぃ",
+    "romaji": "ti",
+    "meaning": null,
+    "system": "katakana",
+    "deck": "extended",
+    "group": "Sonidos Extendidos"
+  },
+  {
+    "id": "k_word_01",
+    "prompt": "ラーメン",
+    "reading": "らーめん",
+    "romaji": "raamen",
+    "meaning": "Ramen",
+    "system": "katakana",
+    "deck": "words",
+    "group": "Comida / Vocabulario"
+  },
+
+  {
+    "id": "kj_n5_b1_01",
+    "prompt": "日",
+    "reading": "ひ",
+    "romaji": "hi",
+    "meaning": "Día / Sol",
+    "system": "kanji",
+    "deck": "jlpt",
+    "group": "JLPT N5 - Bloque 01"
+  },
+  {
+    "id": "kj_n5_b1_02",
+    "prompt": "月",
+    "reading": "つき",
+    "romaji": "tsuki",
+    "meaning": "Luna / Mes",
+    "system": "kanji",
+    "deck": "jlpt",
+    "group": "JLPT N5 - Bloque 01"
+  },
+  {
+    "id": "kj_n5_b1_03",
+    "prompt": "火",
+    "reading": "ひ",
+    "romaji": "hi",
+    "meaning": "Fuego",
+    "system": "kanji",
+    "deck": "jlpt",
+    "group": "JLPT N5 - Bloque 01"
+  },
+  {
+    "id": "kj_n5_b1_04",
+    "prompt": "水",
+    "reading": "みず",
+    "romaji": "mizu",
+    "meaning": "Agua",
+    "system": "kanji",
+    "deck": "jlpt",
+    "group": "JLPT N5 - Bloque 01"
+  },
+  {
+    "id": "kj_n5_b1_05",
+    "prompt": "木",
+    "reading": "き",
+    "romaji": "ki",
+    "meaning": "Árbol / Madera",
+    "system": "kanji",
+    "deck": "jlpt",
+    "group": "JLPT N5 - Bloque 01"
+  },
+  {
+    "id": "kj_n5_b1_06",
+    "prompt": "金",
+    "reading": "かね",
+    "romaji": "kane",
+    "meaning": "Oro / Dinero",
+    "system": "kanji",
+    "deck": "jlpt",
+    "group": "JLPT N5 - Bloque 01"
+  },
+  {
+    "id": "kj_n5_b1_07",
+    "prompt": "土",
+    "reading": "つち",
+    "romaji": "tsuchi",
+    "meaning": "Tierra / Suelo",
+    "system": "kanji",
+    "deck": "jlpt",
+    "group": "JLPT N5 - Bloque 01"
+  },
+
+  {
+    "id": "kj_n5_w1_01",
+    "prompt": "建物",
+    "reading": "たてもの",
+    "romaji": "tatemono",
+    "meaning": "Edificio",
+    "system": "kanji",
+    "deck": "jlpt",
+    "group": "JLPT N5 - Vocabulario 01"
+  },
+  {
+    "id": "kj_n5_w1_02",
+    "prompt": "友達",
+    "reading": "ともだち",
+    "romaji": "tomodachi",
+    "meaning": "Amigo",
+    "system": "kanji",
+    "deck": "jlpt",
+    "group": "JLPT N5 - Vocabulario 01"
+  },
+
+  {
+    "id": "kj_num_e_01",
+    "prompt": "一",
+    "reading": "いち",
+    "romaji": "ichi",
+    "meaning": "Uno (1)",
+    "system": "kanji",
+    "deck": "numbers",
+    "group": "Números - Básico (1-10)"
+  },
+  {
+    "id": "kj_num_e_02",
+    "prompt": "二",
+    "reading": "に",
+    "romaji": "ni",
+    "meaning": "Dos (2)",
+    "system": "kanji",
+    "deck": "numbers",
+    "group": "Números - Básico (1-10)"
+  },
+  {
+    "id": "kj_num_e_10",
+    "prompt": "十",
+    "reading": "じゅう",
+    "romaji": "juu",
+    "meaning": "Diez (10)",
+    "system": "kanji",
+    "deck": "numbers",
+    "group": "Números - Básico (1-10)"
+  },
+  {
+    "id": "kj_num_m_100",
+    "prompt": "百",
+    "reading": "ひゃく",
+    "romaji": "hyaku",
+    "meaning": "Cien (100)",
+    "system": "kanji",
+    "deck": "numbers",
+    "group": "Números - Intermedio"
+  },
+  {
+    "id": "kj_num_h_daiji_10",
+    "prompt": "拾",
+    "reading": "じゅう",
+    "romaji": "juu",
+    "meaning": "Diez (10 - Formal/Daiji)",
+    "system": "kanji",
+    "deck": "numbers",
+    "group": "Números - Avanzado (Formal)"
+  }
+]
