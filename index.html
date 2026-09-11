@@ -7,66 +7,99 @@
   <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-    <button id="theme-toggle" class="theme-toggle-btn">🌙</button>
+    <button id="theme-toggle" class="theme-toggle-btn" aria-label="Cambiar tema">🌙</button>
+    
     <div class="container">
-        <!-- Vista de Selección/Configuración -->
+        <!-- Vista de Selección / Configuración -->
         <section id="setup-view" class="view active">
-        <h1>Configuración de Estudio</h1>
+          <h1>Configuración de Estudio</h1>
 
-        <!-- Selector de Sistema principal -->
-        <div class="tabs">
-            <button class="tab-btn active" data-system="hiragana">Hiragana</button>
-            <button class="tab-btn" data-system="katakana">Katakana</button>
-            <button class="tab-btn" data-system="kanji">Kanji</button>
-        </div>
+          <!-- Selector de Sistema principal -->
+          <div class="tabs">
+              <button class="tab-btn active" data-system="hiragana">Hiragana</button>
+              <button class="tab-btn" data-system="katakana">Katakana</button>
+              <button class="tab-btn" data-system="kanji">Kanji</button>
+          </div>
 
-        <!-- Preferencias de entrada -->
-        <div class="options-panel">
-            <label class="toggle-label">
-            <input type="checkbox" id="toggle-meaning" checked>
-            Mostrar pista de significado
-            </label>
-        </div>
+          <!-- Preferencias de entrada -->
+          <div class="options-panel">
+              <label class="toggle-label">
+                <input type="checkbox" id="toggle-meaning" checked>
+                Mostrar pista de significado
+              </label>
+          </div>
 
-        <!-- Contenedor dinámico de checkboxes por bloques -->
-        <div id="groups-container" class="groups-grid">
-            <!-- Generado dinámicamente desde app.js -->
-        </div>
+          <!-- Selector Global de Categoría Kanji (Solo visible cuando Kanji está activo) -->
+          <div id="kanji-category-wrapper" class="kanji-filter-container" style="display: none;">
+              <label for="kanji-category-select"><strong>Categoría Kanji:</strong></label>
+              <select id="kanji-category-select" class="form-select">
+                  <option value="jlpt">JLPT</option>
+                  <option value="frequency">Frequency</option>
+                  <option value="kanken">Kanken</option>
+                  <option value="numbers">Grade / Numbers</option>
+              </select>
+          </div>
 
-        <button id="start-btn" class="btn-primary" disabled>Empezar Práctica</button>
+          <!-- Contenedor dinámico de tarjetas de grupos -->
+          <div id="groups-container">
+              <!-- Generado dinámicamente desde app.js -->
+          </div>
+
+          <button id="start-btn" class="btn-primary" disabled>Empezar Práctica</button>
         </section>
 
         <!-- Vista del Juego / Práctica -->
         <section id="quiz-view" class="view">
-        <header class="quiz-header">
-            <button id="exit-btn" class="btn-secondary">← Menú</button>
-            <span id="card-badge" class="badge">JLPT N5 · Bloque 1</span>
-            <div class="score-tracker">
-            <span id="score-correct">✓ 0</span> | <span id="score-incorrect">✗ 0</span>
-            </div>
-        </header>
+          <header class="quiz-header">
+              <button id="exit-btn" class="btn-secondary">← Menú</button>
+              <span id="card-badge" class="badge">JLPT N5 · Bloque 1</span>
+              <div class="score-tracker">
+                <span id="score-correct">✓ 0</span> | <span id="score-incorrect">✗ 0</span>
+              </div>
+          </header>
 
-        <main class="card-container">
-            <div class="card">
-            <div id="card-prompt" class="prompt-text">建物</div>
-            <div id="card-meaning" class="meaning-text">Edificio</div>
-            </div>
+          <main class="card-container">
+              <div class="card">
+                <div id="card-prompt" class="prompt-text">建物</div>
+                <div id="card-meaning" class="meaning-text">Edificio</div>
+              </div>
 
-            <form id="quiz-form" autocomplete="off">
-            <input 
-                type="text" 
-                id="answer-input" 
-                placeholder="Escribe en Kana (ej. たてもの)..." 
-                autofocus 
-            />
-            <button type="submit" class="btn-primary">Enviar</button>
-            </form>
+              <form id="quiz-form" autocomplete="off">
+                <input 
+                    type="text" 
+                    id="answer-input" 
+                    placeholder="Escribe en Kana (ej. たてもの)..." 
+                    autofocus 
+                />
+                <button type="submit" class="btn-primary">Enviar</button>
+              </form>
 
-            <div id="feedback-msg" class="feedback"></div>
-        </main>
+              <div id="feedback-msg" class="feedback"></div>
+          </main>
         </section>
     </div>
 
-  <script src="js/app.js"></script>
+    <!-- Modal Unificado de Selección de Subgrupos y Partes -->
+    <div id="subgroup-modal" class="modal-overlay">
+      <div class="modal-card">
+          <div class="modal-header">
+            <h3 id="modal-title">Seleccionar Subgrupos</h3>
+            <button id="close-modal-btn" class="icon-btn">&times;</button>
+          </div>
+          <div class="modal-body">
+            <div id="modal-breadcrumbs" class="modal-breadcrumbs"></div>
+            <div class="modal-actions">
+                <button id="select-all-modal" class="btn-secondary btn-sm">Seleccionar Todos</button>
+                <button id="deselect-all-modal" class="btn-secondary btn-sm">Deseleccionar Todos</button>
+            </div>
+            <div id="modal-subgroups-grid" class="subgroups-grid"></div>
+          </div>
+          <div class="modal-footer">
+            <button id="save-modal-btn" class="btn-primary">Aceptar</button>
+          </div>
+      </div>
+    </div>
+
+    <script src="js/app.js"></script>
 </body>
 </html>

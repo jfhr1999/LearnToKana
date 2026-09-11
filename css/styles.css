@@ -1,30 +1,57 @@
+/* ==========================================
+   1. VARIABLES & RESET
+   ========================================== */
 :root {
   --bg-color: #f4f6f8;
   --card-bg: #ffffff;
   --text-main: #2d3748;
+  --text-muted: #64748b;
   --primary: #3182ce;
+  --primary-hover: #2b6cb0;
+  --primary-light: #e0f2fe;
   --success: #38a169;
   --danger: #e53e3e;
   --border: #e2e8f0;
+  --chip-bg: #f1f5f9;
+  --max-width: 650px;
+}
+
+[data-theme="dark"] {
+  --bg-color: #1a202c;
+  --card-bg: #2d3748;
+  --text-main: #f7fafc;
+  --text-muted: #a0aec0;
+  --primary: #4299e1;
+  --primary-hover: #3182ce;
+  --primary-light: #2c5282;
+  --border: #4a5568;
+  --chip-bg: #3a4a60;
+}
+
+* {
+  box-sizing: border-box;
 }
 
 body {
-  font-family: system-ui, -apple-system, sans-serif;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   background-color: var(--bg-color);
   color: var(--text-main);
   margin: 0;
-  padding: 20px;
+  padding: 12px;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 .container {
-  max-width: 650px;
+  max-width: var(--max-width);
   margin: 0 auto;
 }
 
 .view { display: none; }
 .view.active { display: block; }
 
-/* Tabs y Checkboxes */
+/* ==========================================
+   2. TABS & CONTROLES SUPERIORES
+   ========================================== */
 .tabs {
   display: flex;
   gap: 10px;
@@ -36,39 +63,251 @@ body {
   padding: 10px;
   border: 1px solid var(--border);
   background: var(--card-bg);
+  color: var(--text-main);
   cursor: pointer;
   border-radius: 6px;
   font-weight: bold;
+  transition: all 0.2s ease;
 }
 
 .tab-btn.active {
   background: var(--primary);
-  color: white;
+  color: #ffffff;
   border-color: var(--primary);
 }
 
-.groups-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  gap: 12px;
-  margin: 20px 0;
-  max-height: 350px;
-  overflow-y: auto;
-  padding-right: 5px;
+.theme-toggle-btn {
+  position: fixed;
+  top: 15px;
+  right: 15px;
+  z-index: 1000;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  color: var(--text-main);
+  padding: 8px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.group-item {
-  background: var(--card-bg);
-  padding: 10px 14px;
-  border-radius: 6px;
-  border: 1px solid var(--border);
+/* Selector Global de Kanji */
+.kanji-filter-container {
+  margin: 15px 0;
   display: flex;
   align-items: center;
   gap: 10px;
-  cursor: pointer;
 }
 
-/* Tarjeta de Estudio */
+.form-select {
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background-color: var(--card-bg);
+  color: var(--text-main);
+  font-size: 0.95rem;
+}
+
+/* ==========================================
+   3. TARJETAS DE GRUPO (SETUP VIEW)
+   ========================================== */
+.group-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 18px;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+
+.group-title-text {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.group-selected-count {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  margin-left: 6px;
+}
+
+.btn-outline {
+  background: transparent;
+  border: 1px solid var(--primary);
+  color: var(--primary);
+  padding: 6px 14px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-outline:hover {
+  background: var(--primary-light);
+}
+
+/* ==========================================
+   4. MODAL & CHIPS (SELECCIÓN DE SUBGRUPOS)
+   ========================================== */
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  z-index: 1000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+.modal-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.modal-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  width: 100%;
+  max-width: 480px;
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+}
+
+.modal-body {
+  padding: 16px;
+  overflow-y: auto;
+}
+
+.modal-breadcrumbs {
+  font-size: 0.85rem;
+  color: var(--primary);
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.subgroups-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+  gap: 10px;
+  margin-top: 12px;
+}
+
+/* Chips estilo Real Kana */
+.chip-btn {
+  padding: 10px;
+  background: var(--chip-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  cursor: pointer;
+  text-align: center;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--text-main);
+  transition: all 0.15s ease;
+  user-select: none;
+}
+
+.chip-btn.selected {
+  background: var(--primary-light);
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.chip-btn.folder-chip {
+  border-style: dashed;
+}
+
+/* Cabecera y acciones del Modal */
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+.modal-header h3 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.icon-btn {
+  background: transparent;
+  border: none;
+  font-size: 1.5rem;
+  color: var(--text-muted);
+  cursor: pointer;
+  line-height: 1;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.btn-secondary {
+  background: var(--chip-bg);
+  color: var(--text-main);
+  border: 1px solid var(--border);
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.85rem;
+  transition: background 0.2s ease;
+}
+
+.btn-secondary:hover {
+  background: var(--border);
+}
+
+.modal-footer {
+  padding: 16px 20px;
+  border-top: 1px solid var(--border);
+}
+
+.btn-secondary.has-selection {
+  background-color: var(--primary, #2b6cb0);
+  color: #ffffff;
+  border-color: var(--primary, #2b6cb0);
+}
+
+.chip-checkbox {
+  padding: 8px 12px;
+  border: 1px solid #cbd5e0;
+  border-radius: 6px;
+  cursor: pointer;
+  user-select: none;
+  text-align: center;
+  background-color: #f7fafc;
+  transition: all 0.2s ease;
+}
+
+.chip-checkbox.selected {
+  background-color: #3182ce;
+  color: #ffffff;
+  border-color: #2b6cb0;
+  font-weight: bold;
+}
+
+/* ==========================================
+   5. TARJETA DE ESTUDIO & QUIZ VIEW
+   ========================================== */
 .quiz-header {
   display: flex;
   justify-content: space-between;
@@ -77,8 +316,8 @@ body {
 }
 
 .badge {
-  background: #ebf8ff;
-  color: #2b6cb0;
+  background: var(--primary-light);
+  color: var(--primary);
   padding: 4px 12px;
   border-radius: 12px;
   font-size: 0.85rem;
@@ -87,6 +326,7 @@ body {
 
 .card {
   background: var(--card-bg);
+  border: 1px solid var(--border);
   border-radius: 12px;
   padding: 40px 20px;
   text-align: center;
@@ -94,27 +334,28 @@ body {
   margin-bottom: 20px;
 }
 
-.prompt-text {
-  font-size: 4rem;
+#card-prompt {
+  font-size: clamp(3rem, 12vw, 5rem);
   font-weight: bold;
+  text-align: center;
   margin-bottom: 10px;
 }
 
 .meaning-text {
   font-size: 1.1rem;
-  color: #718096;
+  color: var(--text-muted);
 }
 
-/* Formulario e Inpust */
 #answer-input {
   width: 100%;
   padding: 14px;
   font-size: 1.2rem;
   border: 2px solid var(--border);
+  background-color: var(--card-bg);
+  color: var(--text-main);
   border-radius: 8px;
-  box-sizing: border-box;
-  margin-bottom: 12px;
   text-align: center;
+  margin-bottom: 12px;
 }
 
 #answer-input:focus {
@@ -126,15 +367,23 @@ body {
   width: 100%;
   padding: 12px;
   background: var(--primary);
-  color: white;
+  color: #ffffff;
   border: none;
   border-radius: 8px;
   font-size: 1rem;
   font-weight: bold;
   cursor: pointer;
+  transition: background-color 0.2s ease;
 }
 
-.btn-primary:disabled { background: #a0aec0; cursor: not-allowed; }
+.btn-primary:hover {
+  background: var(--primary-hover);
+}
+
+.btn-primary:disabled {
+  background: #a0aec0;
+  cursor: not-allowed;
+}
 
 .feedback {
   margin-top: 15px;
@@ -144,33 +393,3 @@ body {
 }
 .feedback.correct { color: var(--success); }
 .feedback.incorrect { color: var(--danger); }
-
-:root {
-  --bg-color: #f4f6f8;
-  --card-bg: #ffffff;
-  --text-main: #2d3748;
-  --border: #e2e8f0;
-  --primary: #3182ce;
-}
-
-[data-theme="dark"] {
-  --bg-color: #1a202c;
-  --card-bg: #2d3748;
-  --text-main: #f7fafc;
-  --border: #4a5568;
-  --primary: #4299e1;
-}
-
-.theme-toggle-btn {
-  position: fixed;
-  top: 15px;
-  right: 15px;
-  z-index: 1000;
-  background: var(--card-bg);
-  border: 1px solid var(--border);
-  color: var(--text-main);
-  padding: 8px 12px;
-  border-radius: 50%;
-  cursor: pointer;
-  font-size: 1.2rem;
-}
