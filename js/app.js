@@ -154,9 +154,9 @@ function renderGroups() {
     const header = document.createElement('div');
     header.className = 'group-header';
     header.innerHTML = `
-      <div>
+      <div class="group-title-container">
         <strong class="group-title-text">${cardData.title}</strong>
-        <span class="group-selected-count"> · ${totalSelectedInCard} seleccionados</span>
+        <span class="group-selected-count">${totalSelectedInCard} seleccionados</span>
       </div>
     `;
     card.appendChild(header);
@@ -164,10 +164,7 @@ function renderGroups() {
     // Contenedor de botones para los grupos/bloques
     const groupsContainer = document.createElement('div');
     groupsContainer.className = 'groups-buttons-container';
-    groupsContainer.style.display = 'flex';
-    groupsContainer.style.flexWrap = 'wrap';
-    groupsContainer.style.gap = '8px';
-    groupsContainer.style.marginTop = '10px';
+    
 
     cardData.groups.forEach((subList, groupName) => {
       const selectedInGroup = subList.filter(s => state.selectedSubgroups.has(s.id)).length;
@@ -333,20 +330,21 @@ function showCard() {
   }
 }
 
+let quizTimeoutId = null;
+
 function handleAnswer() {
+  // Previene múltiples envíos simultáneos
+  if (quizTimeoutId !== null) {
+    advanceToNextCard();
+    return;
+  }
+
   const current = state.deck[state.currentIndex];
-  let input = dom.answerInput.value.trim().toLowerCase();
-
-  // AL PRESIONAR ENTER:
-  // Convertimos cualquier 'n' suelta al final del texto en 'ん' / 'ン'
-  const isKatakana = current.system === 'katakana';
-  const singleN = isKatakana ? 'ン' : 'ん';
-  input = input.replace(/n$/g, singleN);
-
+  const input = dom.answerInput.value.trim().toLowerCase();
+  
   const targetReading = current.reading.trim().toLowerCase();
   const targetRomaji = (current.romaji || '').trim().toLowerCase();
 
-  // Comparación contra Kana convertido o Romaji original
   const isCorrect = input === targetReading || (targetRomaji && input === targetRomaji);
 
   if (isCorrect) {
@@ -361,11 +359,40 @@ function handleAnswer() {
 
   updateScoreUI();
 
-  setTimeout(() => {
-    state.currentIndex = (state.currentIndex + 1) % state.deck.length;
-    showCard();
+  // Transición automática tras 1200ms
+  quizTimeoutId = setTimeout(() => {
+    advanceToNextCard();
   }, 1200);
 }
+
+// Avanza a la siguiente tarjeta y limpia timeouts
+function advanceToNextCard() {
+  if (quizTimeoutId !== null) {
+    clearTimeout(quizTimeoutId);
+    quizTimeoutId = null;
+  }
+  state.currentIndex = (state.currentIndex + 1) % state.deck.length;
+  showCard();
+}
+
+
+// Event Listeners Globales para Atajos de Teclado
+document.addEventListener('keydown', (e) => {
+  // Tecla 'Escape' para cerrar el modal de subgrupos si está abierto
+  if (e.key === 'Escape' && dom.modal && dom.modal.classList.contains('active')) {
+    closeModal();
+    return;
+  }
+
+  // Teclado durante la vista de Quiz
+  if (views.quiz.classList.contains('active')) {
+    // Si la retroalimentación está visible y el usuario presiona Enter o Espacio, avanza de inmediato
+    if (quizTimeoutId !== null && (e.key === 'Enter' || e.key === ' ')) {
+      e.preventDefault();
+      advanceToNextCard();
+    }
+  }
+});
 
 function updateScoreUI() {
   dom.scoreCorrect.textContent = `✓ ${state.score.correct}`;
@@ -377,9 +404,12 @@ function convertRomajiToKana(input, targetSystem = 'hiragana') {
   const isKatakana = targetSystem === 'katakana';
 
   const map = {
+    // Dipthongs & Combination Sounds
     kya: isKatakana ? 'キャ' : 'きゃ', kyu: isKatakana ? 'キュ' : 'きゅ', kyo: isKatakana ? 'キョ' : 'きょ',
     sha: isKatakana ? 'シャ' : 'しゃ', shu: isKatakana ? 'シュ' : 'しゅ', sho: isKatakana ? 'ショ' : 'しょ',
+    sya: isKatakana ? 'シャ' : 'しゃ', syu: isKatakana ? 'シュ' : 'しゅ', syo: isKatakana ? 'ショ' : 'しょ',
     cha: isKatakana ? 'チャ' : 'ちゃ', chu: isKatakana ? 'チュ' : 'ちゅ', cho: isKatakana ? 'チョ' : 'ちょ',
+    tya: isKatakana ? 'チャ' : 'ちゃ', tyu: isKatakana ? 'チュ' : 'ちゅ', tyo: isKatakana ? 'チョ' : 'ちょ',
     nya: isKatakana ? 'ニャ' : 'にゃ', nyu: isKatakana ? 'ニュ' : 'にゅ', nyo: isKatakana ? 'ニョ' : 'にょ',
     hya: isKatakana ? 'ヒャ' : 'ひゃ', hyu: isKatakana ? 'ヒュ' : 'ひゅ', hyo: isKatakana ? 'ヒョ' : 'ひょ',
     mya: isKatakana ? 'ミャ' : 'みゃ', myu: isKatakana ? 'ミュ' : 'みゅ', myo: isKatakana ? 'ミョ' : 'みょ',
@@ -387,15 +417,17 @@ function convertRomajiToKana(input, targetSystem = 'hiragana') {
     gya: isKatakana ? 'ギャ' : 'ぎゃ', gyu: isKatakana ? 'ギュ' : 'ぎゅ', gyo: isKatakana ? 'ギョ' : 'ぎょ',
     ja: isKatakana ? 'ジャ' : 'じゃ', ju: isKatakana ? 'ジュ' : 'じゅ', jo: isKatakana ? 'ジョ' : 'じょ',
     jya: isKatakana ? 'ジャ' : 'じゃ', jyu: isKatakana ? 'ジュ' : 'じゅ', jyo: isKatakana ? 'ジョ' : 'じょ',
+    zya: isKatakana ? 'ジャ' : 'じゃ', zyu: isKatakana ? 'ジュ' : 'じゅ', zyo: isKatakana ? 'ジョ' : 'じょ',
     bya: isKatakana ? 'ビャ' : 'びゃ', byu: isKatakana ? 'ビュ' : 'びゅ', byo: isKatakana ? 'ビョ' : 'びょ',
     pya: isKatakana ? 'ピャ' : 'ぴゃ', pyu: isKatakana ? 'ピュ' : 'ぴゅ', pyo: isKatakana ? 'ピョ' : 'ぴょ',
 
+    // Kana Básicos y variaciones de entrada (si/shi, tu/tsu, hu/fu, zi/ji)
     a: isKatakana ? 'ア' : 'あ', i: isKatakana ? 'イ' : 'い', u: isKatakana ? 'ウ' : 'う', e: isKatakana ? 'エ' : 'え', o: isKatakana ? 'オ' : 'お',
     ka: isKatakana ? 'カ' : 'か', ki: isKatakana ? 'キ' : 'き', ku: isKatakana ? 'ク' : 'く', ke: isKatakana ? 'ケ' : 'け', ko: isKatakana ? 'コ' : 'こ',
-    sa: isKatakana ? 'サ' : 'さ', shi: isKatakana ? 'シ' : 'し', su: isKatakana ? 'ス' : 'す', se: isKatakana ? 'セ' : 'せ', so: isKatakana ? 'ソ' : 'そ',
-    ta: isKatakana ? 'タ' : 'た', chi: isKatakana ? 'チ' : 'ち', tsu: isKatakana ? 'ツ' : 'つ', te: isKatakana ? 'テ' : 'て', to: isKatakana ? 'ト' : 'と',
-    na: isKatakana ? 'ナ' : 'な', ni: isKatakana ? 'ニ' : 'に', nu: isKatakana ? 'ヌ' : 'ぬ', ne: isKatakana ? 'ネ' : 'ね', no: isKatakana ? 'ノ' : 'の',
-    ha: isKatakana ? 'ハ' : 'は', hi: isKatakana ? 'ヒ' : 'ひ', fu: isKatakana ? 'フ' : 'ふ', he: isKatakana ? 'ヘ' : 'へ', ho: isKatakana ? 'ホ' : 'ほ',
+    sa: isKatakana ? 'サ' : 'さ', shi: isKatakana ? 'シ' : 'し', si: isKatakana ? 'シ' : 'し', su: isKatakana ? 'ス' : 'す', se: isKatakana ? 'セ' : 'せ', so: isKatakana ? 'ソ' : 'そ',
+    ta: isKatakana ? 'タ' : 'た', chi: isKatakana ? 'チ' : 'ち', ti: isKatakana ? 'チ' : 'ち', tsu: isKatakana ? 'ツ' : 'つ', tu: isKatakana ? 'ツ' : 'つ', te: isKatakana ? 'テ' : 'て', to: isKatakana ? 'ト' : 'と',
+    na: isKatakana ? 'ナ' : 'な', ni: isKatakana ? 'ニ' : 'に', nu: isKatakana ? 'ヌ' : 'ぬ', ne: isKatakana ? 'ネ' : 'ね', no: isKatakana ? 'ノ' : 'ノ',
+    ha: isKatakana ? 'ハ' : 'は', hi: isKatakana ? 'ヒ' : 'ひ', fu: isKatakana ? 'フ' : 'ふ', hu: isKatakana ? 'フ' : 'ふ', he: isKatakana ? 'ヘ' : 'へ', ho: isKatakana ? 'ホ' : 'ほ',
     ma: isKatakana ? 'マ' : 'ま', mi: isKatakana ? 'ミ' : 'み', mu: isKatakana ? 'ム' : 'む', me: isKatakana ? 'メ' : 'め', mo: isKatakana ? 'モ' : 'も',
     ya: isKatakana ? 'ヤ' : 'や', yu: isKatakana ? 'ユ' : 'ゆ', yo: isKatakana ? 'ヨ' : 'よ',
     ra: isKatakana ? 'ラ' : 'ら', ri: isKatakana ? 'リ' : 'り', ru: isKatakana ? 'ル' : 'る', re: isKatakana ? 'レ' : 'れ', ro: isKatakana ? 'ロ' : 'ろ',
@@ -403,31 +435,28 @@ function convertRomajiToKana(input, targetSystem = 'hiragana') {
     
     ga: isKatakana ? 'ガ' : 'が', gi: isKatakana ? 'ギ' : 'ぎ', gu: isKatakana ? 'グ' : 'ぐ', ge: isKatakana ? 'ゲ' : 'げ', go: isKatakana ? 'ゴ' : 'ご',
     za: isKatakana ? 'ザ' : 'ざ', ji: isKatakana ? 'ジ' : 'じ', zi: isKatakana ? 'ジ' : 'じ', zu: isKatakana ? 'ズ' : 'ず', ze: isKatakana ? 'ゼ' : 'ぜ', zo: isKatakana ? 'ゾ' : 'ぞ',
-    da: isKatakana ? 'ダ' : 'だ', dzi: isKatakana ? 'ヂ' : 'ぢ', dzu: isKatakana ? 'ヅ' : 'づ', du: isKatakana ? 'ヅ' : 'づ', de: isKatakana ? 'デ' : 'で', do: isKatakana ? 'ド' : 'ど',
+    da: isKatakana ? 'ダ' : 'だ', dzi: isKatakana ? 'ヂ' : 'ぢ', di: isKatakana ? 'ヂ' : 'ぢ', dzu: isKatakana ? 'ヅ' : 'づ', du: isKatakana ? 'ヅ' : 'づ', de: isKatakana ? 'デ' : 'で', do: isKatakana ? 'ド' : 'ど',
     ba: isKatakana ? 'バ' : 'ば', bi: isKatakana ? 'ビ' : 'び', bu: isKatakana ? 'ブ' : 'ぶ', be: isKatakana ? 'ベ' : 'べ', bo: isKatakana ? 'ボ' : 'ぼ',
-    pa: isKatakana ? 'パ' : 'パ', pi: isKatakana ? 'ピ' : 'ぴ', pu: isKatakana ? 'プ' : 'ぷ', pe: isKatakana ? 'ペ' : 'ぺ', po: isKatakana ? 'ポ' : 'ぽ',
+    pa: isKatakana ? 'パ' : 'ぱ', pi: isKatakana ? 'ピ' : 'ぴ', pu: isKatakana ? 'プ' : 'ぷ', pe: isKatakana ? 'ペ' : 'ぺ', po: isKatakana ? 'ポ' : 'ぽ',
     '-': 'ー'
   };
 
   let str = input.toLowerCase();
-  const singleN = isKatakana ? 'ン' : 'ん';
   const sokuon = isKatakana ? 'ッ' : 'っ';
-
-  // 1. Doble N o apostrofe fuerzan 'ん'
-  str = str.replace(/nn/g, singleN).replace(/n'/g, singleN);
-
-  // 2. Consonantes dobles (excepto 'nn')
+  
+  // Consonantes dobles -> Sokuon (っ / ッ)
   str = str.replace(/([bcdfghjklmpqrstvwxyz])\1/g, sokuon + '$1');
 
-  // 3. Reemplazo de sílabas principales del mapa
+  // Sonido 'n' (ん / ン)
+  const singleN = isKatakana ? 'ン' : 'ん';
+  str = str.replace(/nn/g, singleN).replace(/n'/g, singleN);
+
   const keys = Object.keys(map).sort((a, b) => b.length - a.length);
   keys.forEach(k => {
     str = str.replaceAll(k, map[k]);
   });
 
-  // 4. Convierte 'n' a 'ん' SOLO si va seguida de consonante (no vocal/y/espacio)
-  str = str.replace(/n(?=[bcdfghjklmnpqrstvwxz])/g, singleN);
-
+  str = str.replace(/n(?![aeiouy])/g, singleN);
   return str;
 }
 
