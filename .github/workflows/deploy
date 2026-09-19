@@ -1,20 +1,15 @@
 name: Deploy to GitHub Pages
 
 on:
-  # Se ejecuta automáticamente con cada commit en la rama main
   push:
     branches: ["main"]
+  workflow_dispatch:
 
-  # Permite ejecutar el despliegue manualmente desde la pestaña Actions
-  workflow_dispatch: Deploy to GitHub Pages
-
-# Otorga los permisos necesarios al GITHUB_TOKEN para desplegar en Pages
 permissions:
   contents: read
   pages: write
   id-token: write
 
-# Permite solo un despliegue simultáneo a la vez
 concurrency:
   group: "pages"
   cancel-in-progress: true
@@ -26,7 +21,7 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
+      - name: Checkout
         uses: actions/checkout@v4
 
       - name: Setup Pages
@@ -35,7 +30,6 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          # Carga la raíz del repositorio (donde están index.html, css/, js/)
           path: '.'
 
       - name: Deploy to GitHub Pages
