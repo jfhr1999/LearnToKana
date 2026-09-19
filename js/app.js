@@ -328,15 +328,22 @@ function showCard() {
   dom.answerInput.focus();
 
   const current = state.deck[state.currentIndex];
+  
+  // 1. Mostrar el prompt en la tarjeta (ej. 建物)
   dom.cardPrompt.textContent = current.prompt;
   dom.cardBadge.textContent = `${current.system.toUpperCase()} · ${current.deck}`;
 
-  if (dom.toggleMeaning.checked && current.meaning) {
-    dom.cardMeaning.innerHTML = `<a href="${current.meaning}" target="_blank" rel="noopener noreferrer">🔍 Ver en Jisho</a>`;
-    dom.cardMeaning.style.display = 'block';
-  } else {
-    dom.cardMeaning.style.display = 'none';
-  }
+  // 2. Construir el término de búsqueda dinámico para Jisho
+  const searchTerm = current.prompt || current.kanji || current.char;
+  const jishoUrl = `https://jisho.org/search/${encodeURIComponent(searchTerm)}`;
+
+  // 3. Inyectar en el HTML el texto del significado + el enlace a Jisho
+  dom.cardMeaning.innerHTML = `
+    <a href="${jishoUrl}" target="_blank" rel="noopener noreferrer" style="margin-left: 8px; text-decoration: none;">
+      🔍 Ver en Jisho
+    </a>
+  `;
+  dom.cardMeaning.style.display = 'block';
 }
 
 let quizTimeoutId = null;
