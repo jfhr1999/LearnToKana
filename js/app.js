@@ -304,12 +304,21 @@ function switchView(viewName) {
 // Lógica de Juego (Quiz)
 function startQuiz() {
   state.deck = state.allData.filter(item => state.selectedSubgroups.has(getSubgroupId(item)));
-  state.deck.sort(() => Math.random() - 0.5);
+  shuffle(state.deck);
   state.currentIndex = 0;
   state.score = { correct: 0, incorrect: 0 };
   updateScoreUI();
   switchView('quiz');
   showCard();
+}
+
+// Algoritmo Fisher-Yates (opcional si buscas aleatoriedad perfecta)
+function shuffle(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
 }
 
 function showCard() {
@@ -421,12 +430,12 @@ function convertRomajiToKana(input, targetSystem = 'hiragana') {
     bya: isKatakana ? 'ビャ' : 'びゃ', byu: isKatakana ? 'ビュ' : 'びゅ', byo: isKatakana ? 'ビョ' : 'びょ',
     pya: isKatakana ? 'ピャ' : 'ぴゃ', pyu: isKatakana ? 'ピュ' : 'ぴゅ', pyo: isKatakana ? 'ピョ' : 'ぴょ',
 
-    // Kana Básicos y variaciones de entrada (si/shi, tu/tsu, hu/fu, zi/ji)
+    // Kana Básicos y variaciones (si/shi, tu/tsu, hu/fu, zi/ji)
     a: isKatakana ? 'ア' : 'あ', i: isKatakana ? 'イ' : 'い', u: isKatakana ? 'ウ' : 'う', e: isKatakana ? 'エ' : 'え', o: isKatakana ? 'オ' : 'お',
     ka: isKatakana ? 'カ' : 'か', ki: isKatakana ? 'キ' : 'き', ku: isKatakana ? 'ク' : 'く', ke: isKatakana ? 'ケ' : 'け', ko: isKatakana ? 'コ' : 'こ',
     sa: isKatakana ? 'サ' : 'さ', shi: isKatakana ? 'シ' : 'し', si: isKatakana ? 'シ' : 'し', su: isKatakana ? 'ス' : 'す', se: isKatakana ? 'セ' : 'せ', so: isKatakana ? 'ソ' : 'そ',
     ta: isKatakana ? 'タ' : 'た', chi: isKatakana ? 'チ' : 'ち', ti: isKatakana ? 'チ' : 'ち', tsu: isKatakana ? 'ツ' : 'つ', tu: isKatakana ? 'ツ' : 'つ', te: isKatakana ? 'テ' : 'て', to: isKatakana ? 'ト' : 'と',
-    na: isKatakana ? 'ナ' : 'な', ni: isKatakana ? 'ニ' : 'に', nu: isKatakana ? 'ヌ' : 'ぬ', ne: isKatakana ? 'ネ' : 'ね', no: isKatakana ? 'ノ' : 'ノ',
+    na: isKatakana ? 'ナ' : 'な', ni: isKatakana ? 'ニ' : 'に', nu: isKatakana ? 'ヌ' : 'ぬ', ne: isKatakana ? 'ネ' : 'ね', no: isKatakana ? 'ノ' : 'の',
     ha: isKatakana ? 'ハ' : 'は', hi: isKatakana ? 'ヒ' : 'ひ', fu: isKatakana ? 'フ' : 'ふ', hu: isKatakana ? 'フ' : 'ふ', he: isKatakana ? 'ヘ' : 'へ', ho: isKatakana ? 'ホ' : 'ほ',
     ma: isKatakana ? 'マ' : 'ま', mi: isKatakana ? 'ミ' : 'み', mu: isKatakana ? 'ム' : 'む', me: isKatakana ? 'メ' : 'め', mo: isKatakana ? 'モ' : 'も',
     ya: isKatakana ? 'ヤ' : 'や', yu: isKatakana ? 'ユ' : 'ゆ', yo: isKatakana ? 'ヨ' : 'よ',
@@ -443,20 +452,23 @@ function convertRomajiToKana(input, targetSystem = 'hiragana') {
 
   let str = input.toLowerCase();
   const sokuon = isKatakana ? 'ッ' : 'っ';
+  const singleN = isKatakana ? 'ン' : 'ん';
   
-  // Consonantes dobles -> Sokuon (っ / ッ)
+  // 1. Consonantes dobles -> Sokuon (っ / ッ)
   str = str.replace(/([bcdfghjklmpqrstvwxyz])\1/g, sokuon + '$1');
 
-  // Sonido 'n' (ん / ン)
-  const singleN = isKatakana ? 'ン' : 'ん';
+  // 2. Doble 'nn' o 'n'' -> ん / ン explícito
   str = str.replace(/nn/g, singleN).replace(/n'/g, singleN);
 
+  // 3. Mapeo de combinaciones y sílabas Kana
   const keys = Object.keys(map).sort((a, b) => b.length - a.length);
   keys.forEach(k => {
     str = str.replaceAll(k, map[k]);
   });
 
-  str = str.replace(/n(?![aeiouy])/g, singleN);
+  // 4. Convierte 'n' seguida de consonante que NO sea 'y' (ej. nk -> んk)
+  str = str.replace(/n(?=[bcdfghjklmnpqrstvwxz])/g, singleN);
+
   return str;
 }
 
