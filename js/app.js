@@ -374,7 +374,7 @@ function handleAnswer() {
   }, 1200);
 }
 
-// Avanza a la siguiente tarjeta y limpia timeouts
+// Avanza a la siguiente tarjeta y limpia timeouts 
 function advanceToNextCard() {
   if (quizTimeoutId !== null) {
     clearTimeout(quizTimeoutId);
