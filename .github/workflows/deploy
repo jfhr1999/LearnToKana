@@ -6,7 +6,7 @@ on:
     branches: ["main"]
 
   # Permite ejecutar el despliegue manualmente desde la pestaña Actions
-  workflow_dispatch:
+  workflow_dispatch: Deploy to GitHub Pages
 
 # Otorga los permisos necesarios al GITHUB_TOKEN para desplegar en Pages
 permissions:
